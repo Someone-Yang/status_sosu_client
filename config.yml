@@ -5,3 +5,4 @@ client:
   clientname: "demo"
   printstatus: True
   upload: True
+  log: True

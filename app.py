@@ -1,15 +1,18 @@
-import yaml,psutil,platform,requests
+import yaml,psutil,platform,requests,json,datetime
 
 try:
     with open('./config.yml', 'r', encoding='utf-8') as f:
         config = yaml.load(f.read(), Loader=yaml.FullLoader)
     clientname = config['client']['clientname']
     printstatus = config['client']['printstatus']
+    log = config['client']['log']
     if printstatus is None:
         printstatus = True
     upload = config['client']['upload']
     if upload is None:
         upload = True
+    if log is None:
+        log = False
 
 except:
     print("Cannot read config.yml. Collect status only.")
@@ -99,6 +102,17 @@ postData = {}
 postData['clientname'] = clientname
 postData['secret'] = hostSec
 postData['data'] = data
+current_time = datetime.datetime.now()
+if log:
+    logName = current_time.strftime("%Y%m%d%H%M%S")
+    print(f"Writing log file to ./logs/{logName}.json, please wait.")
+    try:
+        with open(f'./logs/{logName}.json', 'w', encoding='utf-8') as file:
+            file.write(json.dumps(data))
+        print("Log succeeded sosu!")
+    except:
+        print("Fail to write log file!")
+print()
 if upload:
     print(f"Now uploading result to host {hostAdd} sosu!")
     try:
@@ -111,4 +125,4 @@ if upload:
             print(f"Remote response: {response.text}")
     except:
         print("There was a problem when initiating the request sosu!")
-print("Collection completed sosu.")
+print(f"{current_time.strftime('%Y-%m-%d %H:%M:%S')} Collection completed sosu.")
