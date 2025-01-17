@@ -3,3 +3,5 @@ host:
   secret: "faputa"
 client:
   clientname: "demo"
+  printstatus: True
+  upload: True
