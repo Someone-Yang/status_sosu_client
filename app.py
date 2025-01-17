@@ -79,6 +79,9 @@ if uname.system != "Windows":
         print()
 
 partitions = psutil.disk_partitions()
+spec = config['client']['spec-disks']['enable']
+if spec is None:
+    spec = False
 data['disk'] = []
 if printstatus:
     print("==== Disk Info ====")
@@ -88,17 +91,20 @@ for partition in partitions:
     perpart['device'] = partition.device
     perpart['mountpoint'] = partition.mountpoint
     perpart['fs'] = partition.fstype
-    try:
-        partition_usage = psutil.disk_usage(partition.mountpoint)
-    except PermissionError:
+    if (spec and perpart['mountpoint'] in config['client']['spec-disks']['mountpoints']) or (not spec):
+        try:
+            partition_usage = psutil.disk_usage(partition.mountpoint)
+        except PermissionError:
+            continue
+        perpart['total'] = format(partition_usage.total / (1024 ** 3),".2f")
+        perpart['used'] = format(partition_usage.used / (1024 ** 3),".2f")
+        perpart['free'] = format(partition_usage.free / (1024 ** 3),".2f")
+        perpart['usage'] = partition_usage.percent
+        if printstatus:
+            print(f"{perpart['device']}\t{perpart['mountpoint']}\t{perpart['fs']}\t{perpart['total']} GB\t{perpart['free']} GB\t{perpart['used']} GB ({perpart['usage']}%)")
+        data['disk'].append(perpart)
+    else:
         continue
-    perpart['total'] = format(partition_usage.total / (1024 ** 3),".2f")
-    perpart['used'] = format(partition_usage.used / (1024 ** 3),".2f")
-    perpart['free'] = format(partition_usage.free / (1024 ** 3),".2f")
-    perpart['usage'] = partition_usage.percent
-    if printstatus:
-        print(f"{perpart['device']}\t{perpart['mountpoint']}\t{perpart['fs']}\t{perpart['total']} GB\t{perpart['free']} GB\t{perpart['used']} GB ({perpart['usage']}%)")
-    data['disk'].append(perpart)
 if printstatus:
     print()
 
@@ -120,9 +126,9 @@ postData['data'] = data
 current_time = datetime.datetime.now()
 if log:
     logName = current_time.strftime("%Y%m%d%H%M%S")
-    print(f"Writing log file to ./logs/{logName}.json, please wait.")
+    print(f"Writing log file to logs/{logName}.json, please wait.")
     try:
-        with open(f'./logs/{logName}.json', 'w', encoding='utf-8') as file:
+        with open(f'logs/{logName}.json', 'w', encoding='utf-8') as file:
             file.write(json.dumps(data))
         print("Log succeeded sosu!")
     except:

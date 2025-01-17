@@ -6,3 +6,6 @@ client:
   printstatus: True
   upload: True
   log: True
+  spec-disks:
+    enable: False
+    mountpoints: ["C:\\","D:\\"]
