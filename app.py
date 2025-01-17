@@ -63,6 +63,21 @@ if printstatus:
     print(f"Percentage: {data['mem_usage']['usage']}%")
     print()
 
+if uname.system != "Windows":
+    swap = psutil.swap_memory()
+    data['swap_usage'] = {}
+    data['swap_usage']['total'] = format(swap.total / (1024 ** 3),".2f")
+    data['swap_usage']['free'] = format(swap.free / (1024 ** 3),".2f")
+    data['swap_usage']['used'] = format(swap.used / (1024 ** 3),".2f")
+    data['swap_usage']['usage'] = swap.percent
+    if printstatus:
+        print("==== Swap Info ====")
+        print(f"Total: {data['swap_usage']['total']} GB")
+        print(f"Free: {data['swap_usage']['free']} GB")
+        print(f"Used: {data['swap_usage']['used']} GB")
+        print(f"Percentage: {data['swap_usage']['usage']}%")
+        print()
+
 partitions = psutil.disk_partitions()
 data['disk'] = []
 if printstatus:
