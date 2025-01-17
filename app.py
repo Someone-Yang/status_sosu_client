@@ -13,6 +13,9 @@ try:
         upload = True
     if log is None:
         log = False
+    cpu_interval = config['client']['cpu-interval']
+    if cpu_interval is None:
+        cpu_interval = 1
 
 except:
     print("Cannot read config.yml. Collect status only.")
@@ -40,7 +43,7 @@ data['cpu_usage'] = {}
 data['cpu_usage']['physical_cores'] = psutil.cpu_count(logical=False)
 data['cpu_usage']['total_cores'] = psutil.cpu_count(logical=True)
 data['cpu_usage']['frequency'] = format(psutil.cpu_freq().current,".2f")
-data['cpu_usage']['usage'] = psutil.cpu_count(logical=False)
+data['cpu_usage']['usage'] = psutil.cpu_percent(interval=cpu_interval)
 if printstatus:
     print("==== CPU Info ====")
     print(f"Physical cores: {data['cpu_usage']['physical_cores']}")
