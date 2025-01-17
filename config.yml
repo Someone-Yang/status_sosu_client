@@ -1,0 +1,5 @@
+host:
+  address: "http://localhost:5000"
+  secret: "faputa"
+client:
+  clientname: "demo"
