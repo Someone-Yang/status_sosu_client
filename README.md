@@ -44,4 +44,6 @@ client:
   printstatus: True
   # 是否上传状态信息
   upload: True
+  # 是否写入日志
+  log: True
 ```
