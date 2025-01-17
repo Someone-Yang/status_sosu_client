@@ -40,4 +40,8 @@ host:
 client:
   # 被测本机名称，需和展示端设置一致
   clientname: "demo"
+  # 是否打印状态信息
+  printstatus: True
+  # 是否上传状态信息
+  upload: True
 ```
