@@ -1,12 +1,24 @@
 host:
+  # 展示端主机地址
   address: "http://localhost:5000"
+  # 密钥
+  # 需和展示端设置一致
   secret: "faputa"
 client:
+  # 被测本机名称
+  # 需和展示端设置一致
   clientname: "demo"
+  # 是否打印状态信息
   printstatus: True
+  # 是否上传状态信息
   upload: True
+  # 是否写入日志
   log: True
+  # Psutil 获取 CPU 用量时的 interval 参数
   cpu-interval: 1
+  # 仅写入指定硬盘挂载点
   spec-disks:
+    # 是否启用此功能
     enable: False
-    mountpoints: ["C:\\","D:\\"]
+    # 如果启用则输出哪些挂载点
+    mountpoints: ["C:\\","/home"]
